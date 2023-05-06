@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Adventure</title>
+    <style>
+        #messages { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        .message { margin-bottom: 10px; }
+        .fromPlayer { color: blue; }
+    </style>
+</head>
+<body>
+    <div id="messages"></div>
+    <div id="choices"></div>
+    <button onclick="start()" id="btnStart">Start</button>
+    <button onclick="reset()">Reset</button>
+    <script defer>
+
+        async function start() {
+            const response = await fetch("/api/story/start");
+            const data = await response.json();
+            displayStoryNode(data);
+            document.querySelector("#btnStart").remove();
+        }
+
+        async function reset() {
+            await fetch("/api/story/reset");
+            window.location.reload();
+        }
+
+        async function proceed(choiceIndex) {
+
+            let choice = currentStoryNode.choices[choiceIndex];
+            messages.innerHTML += `<div class="message fromPlayer">Player: ${choice.text}</div>`;
+
+            const response = await fetch("/api/story/proceed", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: choice.nextNodeId }),
+            });
+
+            const storyNode = await response.json();
+            displayStoryNode(storyNode);
+        }
+
+        function displayStoryNode(storyNode) {
+            
+            currentStoryNode = storyNode;
+
+            const messages = document.getElementById("messages");
+            messages.innerHTML += `<div class="message">${storyNode.text}</div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            const choices = document.getElementById("choices");
+            choices.innerHTML = "";
+            storyNode.choices.forEach((choice, index) => {
+                choices.innerHTML += `<button onclick="proceed(${index})">${choice.text}</button>`;
+            });
+        }
+
+        let currentStoryNode;
+    </script>
+</body>
+</html>
