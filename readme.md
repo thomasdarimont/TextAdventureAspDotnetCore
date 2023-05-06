@@ -9,6 +9,11 @@ auf Basis von "Minimal API" im Rahmen des coderdojo coding trainings für zukün
 - In der Datei [Story.cs](./Story.cs) findet sich das Klassenmodell zur Abbildung einer interaktiven Story.  
 - In der Datei [wwwroot/index.html](./wwwroot/index.html) ist ein kleines Frontend auf Basis von HTML, JavaScript und CSS zu finden.  
 
+# Requirements
+
+Dieses Beispiel nutzt ASP.Net Core und benötigt das dotnetcore SDK 7.
+Siehe: https://dotnet.microsoft.com/en-us/download
+
 # Build
 
 ```
