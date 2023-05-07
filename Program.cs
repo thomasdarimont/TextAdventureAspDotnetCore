@@ -1,8 +1,8 @@
 // Verwendet die Microsoft.AspNetCore.Mvc-Namespace
 // die übrigen "usings" sind bei ASP.NET Core "Minimal APIs" implizit definiert (siehe Datei TextAdventure.csproj -> ImplicitUsings)
 // die impliziten usings können in der Datei obj/Debug/net7.0/TextAdventure.GlobalUsings.g.cs eingesehen werden
-using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Mvc;
 using TextAdventure;
 
 // Erstellt einen WebApplication-Builder zur Definition einer Web Anwendung
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Fügt den NewtonsoftJson-Controller hinzu -> dieser Ermöglicht die Verarbeitung von Anfragen und Erzeugung von Antworten im JSON Format.
 // Hinweis: Bei der Konvertierung von C# Objekten nach JSON werden die Properties automatisch kleingeschrieben!
 builder.Services.AddControllers()
-                .AddNewtonsoftJson();
+    .AddNewtonsoftJson();
 
 // Fügt Session-Unterstützung hinzu - damit kann pro Benutzer auf dem Server Zustand über mehrere Anfragen verwaltet werden
 // Wir brauchen die Session um Server-seitig zu Speichern an welcher Stelle von der Story der User sich befindet. 
@@ -38,7 +38,7 @@ app.UseSession();
 // Erstellt eine neue DemoStory-Instanz - In dieser Beispielanwendung wird die Geschichte und möglichen Interaktionspfade mit ihren Verzweigungen als "Story" beschrieben.
 // Die DemoStory demonstriert die Definition einer Geschichte.
 // Siehe Story.cs
-var story = new DemoStory();
+Story story = new DemoStory();
 
 // Definiert die Konstante für die aktuelle Node-ID -> mit diesem Namen merken wir uns in der Session an welcher Stelle der User in der Geschichte steht.
 const string CURRENT_NODE_ID = "currentNodeId";
@@ -46,8 +46,8 @@ const string CURRENT_NODE_ID = "currentNodeId";
 // Ab hier definieren wir unsere "Handler" für die API Endpunkte die wir über HTTP aufrufbar machen wollen.
 
 // Mappt den Anfrage-Pfad: "/api/story/start" für HTTP-GET Aufrufe
-app.MapGet("/api/story/start", async (HttpContext context) => {
-        
+app.MapGet("/api/story/start", async (HttpContext context) =>
+{
     Console.WriteLine($"Starte Sitzung mit SessionID={context.Session.Id}");
 
     // Holt die aktuelle Node-ID aus der Session oder startet mit der ersten Node
@@ -73,8 +73,8 @@ app.MapPost("/api/story/proceed", async (HttpContext context, [FromBody] UserInp
 });
 
 // Mappt den Anfrage-Pfad: "/api/story/reset" für HTTP-GET Aufrufe
-app.MapGet("/api/story/reset", async (HttpContext context) => {
-
+app.MapGet("/api/story/reset", async (HttpContext context) =>
+{
     Console.WriteLine($"Beende Sitzung mit SessionID={context.Session.Id}");
 
     // Leert die Session
@@ -90,10 +90,7 @@ app.MapGet("/api/story/reset", async (HttpContext context) => {
 // Startet die Anwendung
 app.Run();
 
-// Ab hier definieren wir das Klassen Modell für Benutzereingaben, Antworten sowie Story-Definition
+// Ab hier definieren wir das Klassen Modell für Benutzereingaben
 
 // Definiert den UserInput-Datentyp als c# record
 record UserInput(string Text);
-
-// Definiert den Response-Datentyp als  c# record
-record Response(string Message);
